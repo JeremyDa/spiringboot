@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+  <resultMap id="BaseResultMap" type="map">
+    <id column="F_PID" jdbcType="VARCHAR" property="fPid" />
+    <result column="F_NAME" jdbcType="VARCHAR" property="fName" />
+    <result column="F_PASSWORD" jdbcType="VARCHAR" property="fPassword" />
+    <result column="F_BRNO" jdbcType="VARCHAR" property="fBrno" />
+    <result column="F_POST" jdbcType="VARCHAR" property="fPost" />
+    <result column="F_ROLEID" jdbcType="VARCHAR" property="fRoleid" />
+    <result column="F_FLAG" jdbcType="VARCHAR" property="fFlag" />
+    <result column="F_TELEPHONE1" jdbcType="VARCHAR" property="fTelephone1" />
+    <result column="F_TELEPHONE2" jdbcType="VARCHAR" property="fTelephone2" />
+    <result column="F_GDDH" jdbcType="VARCHAR" property="fGddh" />
+    <result column="F_PAD" jdbcType="VARCHAR" property="fPad" />
+    <result column="F_STATE" jdbcType="VARCHAR" property="fState" />
+    <result column="F_PUSHID" jdbcType="VARCHAR" property="fPushid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    F_PID, F_NAME, F_PASSWORD, F_BRNO, F_POST, F_ROLEID, F_FLAG, F_TELEPHONE1, F_TELEPHONE2, 
+    F_GDDH, F_PAD, F_STATE
+  </sql>
+
+  <select id="selectByPassword" parameterType="map" resultMap="BaseResultMap">
+    select
+    a.F_PID, a.F_NAME, a.F_PASSWORD, a.F_BRNO, a.F_POST, a.F_ROLEID, a.F_FLAG, a.F_TELEPHONE1, a.F_TELEPHONE2,
+    a.F_GDDH, a.F_PAD, case a.F_STATE when '0' then '正常' else '请假' end as showstate,a.F_STATE,b.F_NAME as branchname,c.F_NAME as rolename
+    from ebms_user a left join ebms_branch b on a.F_BRNO=b.F_BRANCHID left join ebms_userrole c on a.F_ROLEID = c.F_ROLEID
+    where
+    a.F_PID = #{name}
+    AND a.F_PASSWORD = #{password}
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select
+    a.F_PID, a.F_NAME, a.F_PASSWORD, a.F_BRNO, a.F_POST, a.F_ROLEID, a.F_FLAG, a.F_TELEPHONE1, a.F_TELEPHONE2,
+    a.F_GDDH, a.F_PAD, case a.F_STATE when '0' then '正常' else '请假' end as showstate,a.F_STATE,b.F_NAME as branchname,c.F_NAME as rolename
+    from ebms_user a left join ebms_branch b on a.F_BRNO=b.F_BRANCHID left join ebms_userrole c on a.F_ROLEID = c.F_ROLEID
+    <where>
+      <if test="fPid != null">
+        a.F_PID = #{fPid,jdbcType=VARCHAR}
+      </if>
+      <if test="name != null">
+        AND a.F_NAME = #{name}
+      </if>
+      <if test="password != null">
+        AND a.F_PASSWORD = #{password}
+      </if>
+      <if test="fbrno != null">
+        AND a.F_BRNO  LIKE #{fbrno}"%"
+      </if>
+    </where>
+  </select>
+
+  <select id="selectGroupName" parameterType="map" resultMap="BaseResultMap">
+    SELECT group_concat(F_NAME) fUsername
+    FROM ebms_user WHERE F_PID IN (${fPid})
+  </select>
+
+  <select id="selectByBrno" parameterType="map" resultMap="BaseResultMap">
+    select
+    a.F_PID, a.F_NAME, a.F_PASSWORD, a.F_BRNO, a.F_POST, a.F_ROLEID, a.F_FLAG, a.F_TELEPHONE1, a.F_TELEPHONE2,
+    a.F_GDDH, a.F_PAD, case a.F_STATE when '0' then '正常' else '请假' end as showstate,a.F_STATE,b.F_NAME as branchname
+    from ebms_user a left join ebms_branch b on a.F_BRNO=b.F_BRANCHID
+    <where>
+      <if test="fBrno != null">
+        a.F_BRNO like CONCAT(#{fBrno,jdbcType=VARCHAR},'%')
+      </if>
+    </where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from ebms_user
+    where F_PID = #{fPid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="map">
+    insert into ebms_user (F_PID, F_NAME, F_PASSWORD,
+    F_BRNO, F_POST, F_ROLEID,
+    F_FLAG, F_TELEPHONE1, F_TELEPHONE2,
+    F_GDDH, F_PAD, F_STATE
+    )
+    values (#{fPid,jdbcType=VARCHAR}, #{fName,jdbcType=VARCHAR}, #{fPassword,jdbcType=VARCHAR},
+    #{fBrno,jdbcType=VARCHAR}, #{fPost,jdbcType=VARCHAR}, #{fRoleid,jdbcType=VARCHAR},
+    #{fFlag,jdbcType=VARCHAR}, #{fTelephone1,jdbcType=VARCHAR}, #{fTelephone2,jdbcType=VARCHAR},
+    #{fGddh,jdbcType=VARCHAR}, #{fPad,jdbcType=VARCHAR}, #{fState,jdbcType=VARCHAR}
+    )
+  </insert>
+  <insert id="insertSelective" parameterType="map">
+    insert into ebms_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fPid != null">
+        F_PID,
+      </if>
+      <if test="fName != null">
+        F_NAME,
+      </if>
+      <if test="fPassword != null">
+        F_PASSWORD,
+      </if>
+      <if test="fBrno != null">
+        F_BRNO,
+      </if>
+      <if test="fPost != null">
+        F_POST,
+      </if>
+      <if test="fRoleid != null">
+        F_ROLEID,
+      </if>
+      <if test="fFlag != null">
+        F_FLAG,
+      </if>
+      <if test="fTelephone1 != null">
+        F_TELEPHONE1,
+      </if>
+      <if test="fTelephone2 != null">
+        F_TELEPHONE2,
+      </if>
+      <if test="fGddh != null">
+        F_GDDH,
+      </if>
+      <if test="fPad != null">
+        F_PAD,
+      </if>
+      <if test="fState != null">
+        F_STATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fPid != null">
+        #{fPid,jdbcType=VARCHAR},
+      </if>
+      <if test="fName != null">
+        #{fName,jdbcType=VARCHAR},
+      </if>
+      <if test="fPassword != null">
+        #{fPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="fBrno != null">
+        #{fBrno,jdbcType=VARCHAR},
+      </if>
+      <if test="fPost != null">
+        #{fPost,jdbcType=VARCHAR},
+      </if>
+      <if test="fRoleid != null">
+        #{fRoleid,jdbcType=VARCHAR},
+      </if>
+      <if test="fFlag != null">
+        #{fFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="fTelephone1 != null">
+        #{fTelephone1,jdbcType=VARCHAR},
+      </if>
+      <if test="fTelephone2 != null">
+        #{fTelephone2,jdbcType=VARCHAR},
+      </if>
+      <if test="fGddh != null">
+        #{fGddh,jdbcType=VARCHAR},
+      </if>
+      <if test="fPad != null">
+        #{fPad,jdbcType=VARCHAR},
+      </if>
+      <if test="fState != null">
+        #{fState,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="map">
+    update ebms_user
+    <set>
+      <if test="fPid != null">
+        F_PID = #{fPid,jdbcType=VARCHAR},
+      </if>
+      <if test="fName != null">
+        F_NAME = #{fName,jdbcType=VARCHAR},
+      </if>
+      <if test="fPassword != null">
+        F_PASSWORD = #{fPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="fBrno != null">
+        F_BRNO = #{fBrno,jdbcType=VARCHAR},
+      </if>
+      <if test="fPost != null">
+        F_POST = #{fPost,jdbcType=VARCHAR},
+      </if>
+      <if test="fRoleid != null">
+        F_ROLEID = #{fRoleid,jdbcType=VARCHAR},
+      </if>
+      <if test="fFlag != null">
+        F_FLAG = #{fFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="fTelephone1 != null">
+        F_TELEPHONE1 = #{fTelephone1,jdbcType=VARCHAR},
+      </if>
+      <if test="fTelephone2 != null">
+        F_TELEPHONE2 = #{fTelephone2,jdbcType=VARCHAR},
+      </if>
+      <if test="fGddh != null">
+        F_GDDH = #{fGddh,jdbcType=VARCHAR},
+      </if>
+      <if test="fPad != null">
+        F_PAD = #{fPad,jdbcType=VARCHAR},
+      </if>
+      <if test="fState != null">
+        F_STATE = #{fState,jdbcType=VARCHAR},
+      </if>
+      <if test="fPushid != null">
+        F_PUSHID = #{fPushid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where F_PID = #{ofPid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="map">
+    update ebms_user
+    set F_NAME = #{fName,jdbcType=VARCHAR},
+    F_PASSWORD = #{fPassword,jdbcType=VARCHAR},
+    F_BRNO = #{fBrno,jdbcType=VARCHAR},
+    F_POST = #{fPost,jdbcType=VARCHAR},
+    F_ROLEID = #{fRoleid,jdbcType=VARCHAR},
+    F_FLAG = #{fFlag,jdbcType=VARCHAR},
+    F_TELEPHONE1 = #{fTelephone1,jdbcType=VARCHAR},
+    F_TELEPHONE2 = #{fTelephone2,jdbcType=VARCHAR},
+    F_GDDH = #{fGddh,jdbcType=VARCHAR},
+    F_PAD = #{fPad,jdbcType=VARCHAR},
+    F_STATE = #{fState,jdbcType=VARCHAR}
+    where F_PID = #{fPid,jdbcType=VARCHAR}
+  </update>
+
+
+  <select id="selectUserinfo" parameterType="map" resultMap="BaseResultMap">
+    select
+    a.F_PID, a.F_NAME, a.F_PASSWORD, a.F_BRNO, a.F_POST, a.F_ROLEID, a.F_FLAG, a.F_TELEPHONE1, a.F_TELEPHONE2,
+    a.F_GDDH, a.F_PAD, a.F_STATE,b.F_NAME as branchname,c.F_NAME as rolename
+    from ebms_user a left join ebms_branch b on a.F_BRNO=b.F_BRANCHID left join ebms_userrole c on a.F_ROLEID=c.F_ROLEID
+    <where>
+      <if test="fPid != null">
+        a.F_PID = #{fPid,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+
+
+
+
+</mapper>

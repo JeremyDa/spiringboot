@@ -1,0 +1,26 @@
+server:
+    port: 8017
+
+spring:
+    http:
+        encoding.charset: UTF-8
+        encoding.enable: true
+        encoding.force: true
+    multipart:
+        maxFileSize : 128MB
+        maxRequestSize : 128MB
+    datasource:
+        url : jdbc:mysql://localhost:3306/ebms_test?useUnicode=yes&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&connectTimeout=60000&socketTimeout=60000&autoReconnect=true&autoReconnectForPools=true&failOverReadOnly=false
+        username : root
+        password : admin
+        driverClassName : com.mysql.jdbc.Driver
+
+mybatis:
+    mapperLocations: classpath:/mapper/*.xml
+logging:
+    config: classpath:logback-spring.xml
+
+upload:
+    url : /Users/
+    absolute : /Users/
+    relative : image/
