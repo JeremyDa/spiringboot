@@ -37,14 +37,5 @@
     <logger name="user" level="all">
         <appender-ref ref="TIME_FILE"/>
     </logger>
-    <logger name="branch" level="all">         <appender-ref ref="TIME_FILE"/>     </logger>
-    <logger name="userrole" level="all">         <appender-ref ref="TIME_FILE"/>     </logger>
-    <logger name="menu" level="all">         <appender-ref ref="TIME_FILE"/>     </logger>
-    <logger name="appDeptIntroduce" level="all">         <appender-ref ref="TIME_FILE"/>     </logger>
-    <logger name="appDoctorIntroduce" level="all">         <appender-ref ref="TIME_FILE"/>     </logger>
-    <logger name="appMsgTeletext" level="all">         <appender-ref ref="TIME_FILE"/>     </logger>
-    <logger name="appSurveyMain" level="all">         <appender-ref ref="TIME_FILE"/>     </logger>
-    <logger name="appSurveyItems" level="all">         <appender-ref ref="TIME_FILE"/>     </logger>
-    <logger name="appAskBoardItems" level="all">         <appender-ref ref="TIME_FILE"/>     </logger>
 
 </configuration>

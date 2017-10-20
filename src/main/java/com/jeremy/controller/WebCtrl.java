@@ -27,30 +27,6 @@ public class WebCtrl {
     @Autowired
     private WebService service;
 
-    @Autowired
-    private MenuService menuService;
-
-    @Autowired
-    private BranchService branchService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private AskService askService;
-
-    @Autowired
-    private TelTextService telTextService;
-
-    @Autowired
-    private SurveyService surveyService;
-
-    @Autowired
-    private SummaryService summaryService;
-
-    @Autowired
-    private DoctorService doctorService;
-
     @RequestMapping(value = "", method = RequestMethod.POST)
     public Object controller(@RequestParam Map<String, Object> paramMap) throws Exception {
         String toList = (String) paramMap.get("toList");
@@ -95,71 +71,7 @@ public class WebCtrl {
 
                 service.service(paramMap);
 
-            } else if ("menu.getMenuByRole".equals(tradeCode)) {
-                retMap.put("menuInfo", (List) menuService.serviceByRole(paramMap));
-            } else if ("menu.getMenu".equals(tradeCode)) {
-                retMap.put("menuInfo", (List) menuService.service(paramMap));
-            } else if ("branch.selectAllBranches".equals(tradeCode)) {
-                retMap.put("branchInfo", branchService.service(paramMap));
-
-            } else if ("appAskBoardMain.selectByPrimaryKey".equals(tradeCode)) {
-                retMap.put(listKey, askService.service(paramMap));
-            }
-            else if ("appDeptIntroduce.updateByPrimaryKeySelective".equals(tradeCode)
-                    || "appDeptIntroduce.insertSelective".equals(tradeCode)
-                    || "appDeptIntroduce.deleteByPrimaryKey".equals(tradeCode)
-
-                    ||"appDoctorIntroduce.updateByPrimaryKeySelective".equals(tradeCode)
-                    || "appDoctorIntroduce.insertSelective".equals(tradeCode)
-                    || "appDoctorIntroduce.deleteByPrimaryKey".equals(tradeCode)
-
-            ) {
-
-                if("appDoctorIntroduce.insertSelective".equals(tradeCode)
-                        ||"appDoctorIntroduce.updateByPrimaryKeySelective".equals(tradeCode)){
-                    int ret = (int) doctorService.service(paramMap);
-                    System.out.println("ret:" + ret);
-                    if (0 >= ret) {
-                        throw new Exception("操作失败");
-                    }
-                }
-
-                int ret = (int) service.dbinvoke(paramMap);
-                System.out.println("ret:" + ret);
-                if (0 >= ret) {
-                    throw new Exception("操作失败");
-                }
-
-                ret = service.generateJsonFile(paramMap);
-                System.out.println("json ret:" + ret);
-
-
-            }else if("appSurvey.insert".equals(tradeCode)){
-
-                surveyService.service(paramMap);
-
-            }else if("appMsgTeletext.insertSelective".equals(tradeCode)
-                    ||"appMsgTeletext.updateByPrimaryKeySelective".equals(tradeCode)) {
-                int ret = (int) telTextService.service(paramMap);
-                System.out.println("ret:" + ret);
-                if (0 >= ret) {
-                    throw new Exception("操作失败");
-                }
-
-            }else if("appSurveyResult.selectResult".equals(tradeCode)){
-
-                Map resultMap = (Map) surveyService.selectResult(paramMap);
-                retMap.put("retMap",resultMap);
-            }
-
-
-            else if("summary.select".equals(tradeCode)){
-                Map resultMap = (Map) summaryService.service(paramMap);
-
-                retMap.put("retMap",resultMap);
-            }
-
-            else if (SqlCommandType.SELECT == service.getSqlCommandType(tradeCode)) {
+            } else if (SqlCommandType.SELECT == service.getSqlCommandType(tradeCode)) {
                 List retList = (List) service.dbinvoke(paramMap);
                 retMap.put(listKey, retList);
             }
